@@ -57,6 +57,17 @@ static int cmd_info(char* args) {
   return 0;
 }
 
+static int cmd_x(char* args){
+  int n, addr;
+  sscanf(args, "%d %x", &n, &addr);
+  printf("0x%x:\t", addr);
+  for (int i = 0; i < n; i++) {
+    printf("0x%08x ", vaddr_read(addr + 4 * i, 4));
+  }
+  printf("\n");
+  return 0;
+}
+
 static struct {
   char *name;
   char *description;
@@ -67,7 +78,7 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
   { "si", "Step one insturction exactly", cmd_si },
   { "info", "Show things about the program being debugged", cmd_info },
-
+  { "x", "Examine memory", cmd_x},
   /* TODO: Add more commands */
 
 };
