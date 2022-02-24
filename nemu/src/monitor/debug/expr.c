@@ -7,7 +7,15 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ
+  TK_NOTYPE = 256,
+  TK_EQ,
+  TK_NUM,
+  TK_PLUS,
+  TK_MINUS,
+  TK_MULTIPLY,
+  TK_DIV,
+  TK_LEFT,
+  TK_RIGHT,
 
   /* TODO: Add more token types */
 
@@ -23,8 +31,14 @@ static struct rule {
    */
 
   {" +", TK_NOTYPE},    // spaces
-  {"\\+", '+'},         // plus
-  {"==", TK_EQ}         // equal
+  {"\\+", TK_PLUS},     // plus
+  {"\\(", TK_LEFT},
+  {"\\*", TK_MULTIPLY},
+  {"/", TK_DIV},
+  {"-", TK_MINUS},
+  {"==", TK_EQ},        // equal
+  {"[1-9][0-9]*|0", TK_NUM},
+  {"\\)", TK_RIGHT},
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
@@ -80,9 +94,16 @@ static bool make_token(char *e) {
          */
 
         switch (rules[i].token_type) {
-          default: TODO();
+          case TK_NOTYPE:
+            break;
+          case TK_NUM:
+            tokens[nr_token].type = TK_NUM;
+            strcpy(tokens[nr_token].str, substr_start);
+            nr_token++;
+            break;
+          default:
+            tokens[nr_token++].type = rules[i].token_type;
         }
-
         break;
       }
     }
@@ -96,6 +117,106 @@ static bool make_token(char *e) {
   return true;
 }
 
+
+bool check_match(int p, int q) {
+  int unmatched = 0;
+  for (int i = p; i <= q; i++) {
+    if (tokens[i].type == TK_LEFT)
+      unmatched++;
+    else if (tokens[i].type == TK_RIGHT)
+      unmatched--;
+    if (unmatched < 0)
+      return false;
+  }
+  if (!unmatched)
+    return true;
+  else
+    return false;
+}
+
+bool check_parentheses(int p, int q) {
+  if (tokens[p].type == TK_LEFT && tokens[q].type == TK_RIGHT) {
+    if (check_match(p, q)) {
+      if (check_match(p + 1, q - 1))
+        return true;
+    }
+  }
+  return false;
+}
+
+int get_priority(int token) {
+  switch (token) {
+    case TK_PLUS:
+    case TK_MINUS:
+      return 0;
+    case TK_MULTIPLY:
+    case TK_DIV:
+      return 1;
+    default:
+      return -1;
+  }
+}
+
+int find_main_op(int p, int q) {
+  int min_index = -1, min_priority = 10;
+  for (int i = p; i <= q; i++) {
+    if (tokens[i].type == TK_LEFT) {
+      while (tokens[i].type != TK_RIGHT)
+        i++;
+      continue;
+    }
+    int priority = get_priority(tokens[i].type);
+    if (priority >= 0 && priority <= min_priority) {
+      min_index = i;
+      min_priority = priority;
+    }
+  }
+  return min_index;
+}
+
+uint32_t eval(int p, int q) {
+  if (p > q) {
+    return 0;
+  } else if (p == q) {
+    if (tokens[p].type == TK_NUM) {
+      int num;
+      sscanf(tokens[p].str, "%u", &num);
+      return num;
+    }
+    return 0;
+  } else if (check_parentheses(p, q) == true) {
+    /* The expression is surrounded by a matched pair of parentheses.
+      * If that is the case, just throw away the parentheses.
+      */
+    return eval(p + 1, q - 1);
+  } else {
+    /* We should do more things here. */
+    int op = find_main_op(p, q);
+    uint32_t val1 = eval(p, op - 1);
+    uint32_t val2 = eval(op + 1, q);
+    if (op == q) {
+      return 0;
+    } else {
+      switch (tokens[op].type) {
+        case TK_PLUS:
+          return val1 + val2;
+        case TK_MINUS:
+          return val1 - val2;
+        case TK_MULTIPLY:
+          return val1 * val2;
+        case TK_DIV:
+          if (val2 == 0) {
+            return 0;
+          }
+          return val1 / val2;
+        default:
+          assert(0);
+      }
+    }
+  }
+  return 0;
+}
+
 uint32_t expr(char *e, bool *success) {
   if (!make_token(e)) {
     *success = false;
@@ -103,7 +224,7 @@ uint32_t expr(char *e, bool *success) {
   }
 
   /* TODO: Insert codes to evaluate the expression. */
-  TODO();
+  return eval(0, nr_token - 1);
 
   return 0;
 }
