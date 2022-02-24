@@ -134,11 +134,13 @@ bool check_match(int p, int q) {
     return false;
 }
 
-bool check_parentheses(int p, int q) {
+bool check_parentheses(int p, int q, bool* success) {
   if (tokens[p].type == TK_LEFT && tokens[q].type == TK_RIGHT) {
     if (check_match(p, q)) {
       if (check_match(p + 1, q - 1))
         return true;
+    } else {
+      *success = false;
     }
   }
   return false;
@@ -174,8 +176,9 @@ int find_main_op(int p, int q) {
   return min_index;
 }
 
-uint32_t eval(int p, int q) {
+uint32_t eval(int p, int q, bool* success) {
   if (p > q) {
+    *success = false;
     return 0;
   } else if (p == q) {
     if (tokens[p].type == TK_NUM) {
@@ -183,18 +186,22 @@ uint32_t eval(int p, int q) {
       sscanf(tokens[p].str, "%u", &num);
       return num;
     }
+    *success = false;
     return 0;
-  } else if (check_parentheses(p, q) == true) {
+  } else if (check_parentheses(p, q, success) == true) {
     /* The expression is surrounded by a matched pair of parentheses.
       * If that is the case, just throw away the parentheses.
       */
-    return eval(p + 1, q - 1);
+    return eval(p + 1, q - 1, success);
   } else {
     /* We should do more things here. */
+    if (!*success)
+      return 0;
     int op = find_main_op(p, q);
-    uint32_t val1 = eval(p, op - 1);
-    uint32_t val2 = eval(op + 1, q);
+    uint32_t val1 = eval(p, op - 1, success);
+    uint32_t val2 = eval(op + 1, q, success);
     if (op == q) {
+      *success = false;
       return 0;
     } else {
       switch (tokens[op].type) {
@@ -224,7 +231,7 @@ uint32_t expr(char *e, bool *success) {
   }
 
   /* TODO: Insert codes to evaluate the expression. */
-  return eval(0, nr_token - 1);
+  return eval(0, nr_token - 1, success);
 
   return 0;
 }
