@@ -46,6 +46,17 @@ static int cmd_si(char *args) {
   return 0;
 }
 
+static int cmd_info(char* args) {
+  if (!strcmp(args, "r"))
+    for (int i = 0; i < 8; i++){
+      printf("%s\t%08x\t%08u\n", reg_name(i, 4), reg_l(i), reg_l(i));
+    }
+  else if (!strcmp(args, "w")) {
+    //TODO:
+  }
+  return 0;
+}
+
 static struct {
   char *name;
   char *description;
@@ -55,6 +66,7 @@ static struct {
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
   { "si", "Step one insturction exactly", cmd_si },
+  { "info", "Show things about the program being debugged", cmd_info },
 
   /* TODO: Add more commands */
 
