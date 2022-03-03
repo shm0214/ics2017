@@ -161,6 +161,7 @@ int get_priority(int token) {
 
 int find_main_op(int p, int q) {
   int min_index = -1, min_priority = 10;
+  bool flag = false;
   for (int i = p; i <= q; i++) {
     if (tokens[i].type == TK_LEFT) {
       while (tokens[i].type != TK_RIGHT)
@@ -169,10 +170,16 @@ int find_main_op(int p, int q) {
     }
     int priority = get_priority(tokens[i].type);
     if (priority >= 0 && priority <= min_priority) {
+      if (i == p && tokens[i].type == TK_MINUS) {
+        flag = true;
+        continue;
+      }
       min_index = i;
       min_priority = priority;
     }
   }
+  if(min_index == -1 && flag)
+    min_index = p;
   return min_index;
 }
 
