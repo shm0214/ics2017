@@ -223,7 +223,7 @@ uint32_t eval(int p, int q, bool* success) {
         val1 = eval(p, op - num - 1, success);
       else
         val1 = 0;
-      switch (tokens[op].type) {
+      switch (tokens[op - num].type) {
         case TK_PLUS:
           return val1 + val2;
         case TK_MINUS:
@@ -232,6 +232,7 @@ uint32_t eval(int p, int q, bool* success) {
           return val1 * val2;
         case TK_DIV:
           if (val2 == 0) {
+            *success = false;
             return 0;
           }
           return val1 / val2;
@@ -248,6 +249,7 @@ uint32_t eval(int p, int q, bool* success) {
           return val1 * val2;
         case TK_DIV:
           if (val2 == 0) {
+            *success = false;
             return 0;
           }
           return val1 / val2;
