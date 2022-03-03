@@ -222,7 +222,7 @@ uint32_t eval(int p, int q, bool* success) {
       }
       if (num % 2 != 0)
         val2 = -val2;
-      if (op - num <= 0) {
+      if (op - num <= p) {
         *success = true;
         return val2;
       }
