@@ -71,6 +71,11 @@ void free_wp(int n) {
     free_ = temp;
   }
   WP* temp1 = free_;
+  if (temp1->NO > temp->NO) {
+    temp->next = temp1;
+    free_ = temp;
+    return;
+  }
   for (; temp1->next; temp1 = temp1->next) {
     if (temp1->NO < temp->NO && temp1->next->NO > temp->NO) {
       temp->next = temp1->next;
