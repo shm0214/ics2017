@@ -62,7 +62,7 @@ static int cmd_x(char* args){
   char exp[100];
   sscanf(args, "%d %s", &n, exp);
   bool success = true;
-  uint32_t addr = expr(args, &success);
+  uint32_t addr = expr(exp, &success);
   if(!success)
     printf("wrong expression!\n");
   else{
