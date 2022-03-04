@@ -16,6 +16,13 @@ enum {
   TK_DIV,
   TK_LEFT,
   TK_RIGHT,
+  TK_HEX,
+  TK_REG,
+  TK_NEQ,
+  TK_AND,
+  TK_OR,
+  TK_NOT,
+  TK_DEREF,
 
   /* TODO: Add more token types */
 
@@ -38,7 +45,14 @@ static struct rule {
   {"-", TK_MINUS},
   {"==", TK_EQ},        // equal
   {"[1-9][0-9]*|0", TK_NUM},
+  {"0[xX][0-9A-Fa-f]+", TK_HEX},
+  {"\\$[eE]?[a-zA-Z]{2}", TK_REG},
   {"\\)", TK_RIGHT},
+  {"!", TK_NOT},
+  {"!=", TK_NEQ},
+  {"\\|\\|", TK_OR},
+  {"&&", TK_AND},
+
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
@@ -148,18 +162,29 @@ bool check_parentheses(int p, int q, bool* success) {
 
 int get_priority(int token) {
   switch (token) {
+    case TK_OR:
+      return 0;
+    case TK_AND:
+      return 1;
+    case TK_EQ:
+    case TK_NEQ:
+      return 2;
     case TK_PLUS:
     case TK_MINUS:
-      return 0;
+      return 3;
     case TK_MULTIPLY:
     case TK_DIV:
-      return 1;
+      return 4;
+    case TK_NOT:
+    case TK_DEREF:
+      return 5;
     default:
       return -1;
   }
 }
 
 int find_main_op(int p, int q) {
+  // 负号只能出现在一个表达式的开头或连续负号，所以只需要扫描一下有没有别的运算符就行，没有就按照负号处理
   int min_index = -1, min_priority = 10;
   bool flag = false;
   for (int i = p; i <= q; i++) {
@@ -273,6 +298,10 @@ uint32_t expr(char *e, bool *success) {
     *success = false;
     return 0;
   }
+
+  // for (int i = 0; i < nr_token; i++) {
+  //   if ()
+  // }
 
   /* TODO: Insert codes to evaluate the expression. */
   return eval(0, nr_token - 1, success);
