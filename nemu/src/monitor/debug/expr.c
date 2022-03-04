@@ -252,8 +252,8 @@ uint32_t eval(int p, int q, bool* success) {
             return reg_w(i);
           else if (strcmp(tokens[p].str, reg_name(i, 1)) == 0)
             return reg_b(i);
-      } else
-        printf("wrong register!\n");
+      }
+      printf("wrong register!\n");
     }
     *success = false;
     return 0;
