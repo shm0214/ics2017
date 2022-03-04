@@ -292,13 +292,13 @@ uint32_t eval(int p, int q, bool* success) {
           break;
         case TK_NOT:
           if (num % 2 && val2)
-            val2 = 1;
+            val2 = 0;
           else if (num % 2 && !val2)
-            val2 = 0;
-          else if (num % 2 != 0 && val2)
-            val2 = 0;
-          else if (num % 2 != 0 && !val2)
             val2 = 1;
+          else if (num % 2 != 0 && val2)
+            val2 = 1;
+          else if (num % 2 != 0 && !val2)
+            val2 = 0;
           break;
         case TK_DEREF:
           for (int i = 0; i < num; i++) {
