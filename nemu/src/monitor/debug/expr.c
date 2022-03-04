@@ -121,16 +121,19 @@ static bool make_token(char *e) {
           case TK_NUM:
             tokens[nr_token].type = TK_NUM;
             strcpy(tokens[nr_token].str, substr_start);
+            tokens[nr_token].str[substr_len] = 0;
             nr_token++;
             break;
           case TK_HEX:
             tokens[nr_token].type = TK_HEX;
             strcpy(tokens[nr_token].str, substr_start + 2);
+            tokens[nr_token].str[substr_len] = 0;
             nr_token++;
             break;
           case TK_REG:
             tokens[nr_token].type = TK_REG;
             strcpy(tokens[nr_token].str, strlwr(substr_start) + 1);
+            tokens[nr_token].str[substr_len] = 0;
             nr_token++;
             break;
           default:
