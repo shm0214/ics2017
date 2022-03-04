@@ -52,7 +52,7 @@ static int cmd_info(char* args) {
       printf("%s\t%08x\t%08u\n", reg_name(i, 4), reg_l(i), reg_l(i));
     }
   else if (!strcmp(args, "w")) {
-    //TODO:
+    print_watchpoints();
   }
   return 0;
 }

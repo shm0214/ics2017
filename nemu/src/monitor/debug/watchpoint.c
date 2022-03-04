@@ -109,3 +109,13 @@ bool check_watchpoints() {
   }
   return flag;
 }
+
+
+void print_watchpoints() {
+  printf("Num\tWhat\tValue\n");
+  WP* temp = head;
+  while (temp) {
+    printf("%d\t%s\t%d\n", temp->NO, temp->expr, temp->value);
+    temp = temp->next;
+  }
+}
