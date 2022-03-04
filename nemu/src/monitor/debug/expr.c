@@ -276,40 +276,42 @@ uint32_t eval(int p, int q, bool* success) {
       *success = false;
       return 0;
     }
-    if (tokens[op].type == TK_MINUS && *success == false) {
+    if (*success == false && (tokens[op].type == TK_MINUS || get_priority(tokens[op].type == 5))) {
       *success = true;
-      int num = 0;
-      for (int i = op; i >= p; i--){
-        if (tokens[i].type == TK_MINUS)
-          num++;
+      if (tokens[op].type == TK_MINUS) {
+        int num = 0;
+        for (int i = op; i >= p; i--){
+          if (tokens[i].type == TK_MINUS)
+            num++;
+          else
+            break;
+        }
+        if (num % 2 != 0)
+          val2 = -val2;
+        if (op - num <= p) {
+          *success = true;
+          return val2;
+        }
+        if (p <= op - num - 1)
+          val1 = eval(p, op - num - 1, success);
         else
-          break;
-      }
-      if (num % 2 != 0)
-        val2 = -val2;
-      if (op - num <= p) {
-        *success = true;
-        return val2;
-      }
-      if (p <= op - num - 1)
-        val1 = eval(p, op - num - 1, success);
-      else
-        val1 = 0;
-      switch (tokens[op - num].type) {
-        case TK_PLUS:
-          return val1 + val2;
-        case TK_MINUS:
-          return val1 - val2;
-        case TK_MULTIPLY:
-          return val1 * val2;
-        case TK_DIV:
-          if (val2 == 0) {
-            *success = false;
-            return 0;
-          }
-          return val1 / val2;
-        default:
-          assert(0);
+          val1 = 0;
+        switch (tokens[op - num].type) {
+          case TK_PLUS:
+            return val1 + val2;
+          case TK_MINUS:
+            return val1 - val2;
+          case TK_MULTIPLY:
+            return val1 * val2;
+          case TK_DIV:
+            if (val2 == 0) {
+              *success = false;
+              return 0;
+            }
+            return val1 / val2;
+          default:
+            assert(0);
+        }
       }
     } else {
       switch (tokens[op].type) {
