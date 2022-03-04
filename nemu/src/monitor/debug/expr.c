@@ -115,6 +115,11 @@ static bool make_token(char *e) {
             strcpy(tokens[nr_token].str, substr_start);
             nr_token++;
             break;
+          case TK_HEX:
+            tokens[nr_token].type = TK_HEX;
+            strcpy(tokens[nr_token].str, substr_start + 2);
+            nr_token++;
+            break;
           default:
             tokens[nr_token++].type = rules[i].token_type;
         }
@@ -219,7 +224,7 @@ uint32_t eval(int p, int q, bool* success) {
       return num;
     }else if (tokens[p].type == TK_HEX) {
       int num;
-      sscanf(tokens[p].str + 2, "%x", &num);
+      sscanf(tokens[p].str, "%x", &num);
       return num;
     }
     *success = false;
