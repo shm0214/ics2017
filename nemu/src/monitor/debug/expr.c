@@ -56,8 +56,8 @@ static struct rule {
   {"[1-9][0-9]*|0", TK_NUM},
   {"\\$[eE]?[a-zA-Z]{2}", TK_REG},
   {"\\)", TK_RIGHT},
-  {"!", TK_NOT},
   {"!=", TK_NEQ},
+  {"!", TK_NOT},
   {"\\|\\|", TK_OR},
   {"&&", TK_AND},
 
