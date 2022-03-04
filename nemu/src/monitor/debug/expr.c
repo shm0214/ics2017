@@ -6,6 +6,14 @@
 #include <sys/types.h>
 #include <regex.h>
 
+#include <ctype.h>
+char *strlwr(char *str) {
+    char* orign = str;
+    for (; *str != 0; str++)
+        *str = tolower(*str);
+    return orign;
+}
+
 enum {
   TK_NOTYPE = 256,
   TK_NUM,
@@ -120,6 +128,11 @@ static bool make_token(char *e) {
             strcpy(tokens[nr_token].str, substr_start + 2);
             nr_token++;
             break;
+          case TK_REG:
+            tokens[nr_token].type = TK_REG;
+            strcpy(tokens[nr_token].str, strlwr(substr_start) + 1);
+            nr_token++;
+            break;
           default:
             tokens[nr_token++].type = rules[i].token_type;
         }
@@ -222,10 +235,25 @@ uint32_t eval(int p, int q, bool* success) {
       int num;
       sscanf(tokens[p].str, "%u", &num);
       return num;
-    }else if (tokens[p].type == TK_HEX) {
+    } else if (tokens[p].type == TK_HEX) {
       int num;
       sscanf(tokens[p].str, "%x", &num);
       return num;
+    } else if (tokens[p].type == TK_REG) {
+      if (strlen(tokens[p].str) == 3) {
+        for (int i = 0; i < 8; i++)
+          if (strcmp(tokens[p].str, reg_name(i, 4)) == 0)
+            return reg_l(i);
+        if (strcmp(tokens[p].str, "eip") == 0)
+          return cpu.eip;
+      } else if (strlen(tokens[p].str) == 2) {
+        for (int i = 0; i < 8; i++)
+          if (strcmp(tokens[p].str, reg_name(i, 2)) == 0)
+            return reg_w(i);
+          else if (strcmp(tokens[p].str, reg_name(i, 1)) == 0)
+            return reg_b(i);
+      } else
+        printf("wrong register!\n");
     }
     *success = false;
     return 0;
