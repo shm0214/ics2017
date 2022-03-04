@@ -57,7 +57,7 @@ static int cmd_info(char* args) {
   return 0;
 }
 
-static int cmd_x(char* args){
+static int cmd_x(char* args) {
   int n;
   char exp[100];
   sscanf(args, "%d %s", &n, exp);
@@ -75,7 +75,7 @@ static int cmd_x(char* args){
   return 0;
 }
 
-static int cmd_p(char* args){
+static int cmd_p(char* args) {
   bool success = true;
   uint32_t ans = expr(args, &success);
   if(!success)
@@ -83,6 +83,28 @@ static int cmd_p(char* args){
   else{
     printf("%u\n", ans);
   }
+  return 0;
+}
+
+static int cmd_w(char* args) {
+  bool success = true;
+  uint32_t value = expr(args, &success);
+  if(!success) {
+    printf("wrong expression!\n");
+    return -1;
+  }
+  WP* wp = new_wp();
+  wp->value = value;
+  strcpy(wp->expr, args);
+  printf("watchpoint %d: %s\n", wp->NO, wp->expr);
+  return 0;
+}
+
+static int cmd_d(char* args) {
+  int n;
+  if (args)
+    sscanf(args, "%d", &n);
+  free_wp(n);
   return 0;
 }
 
@@ -96,8 +118,10 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
   { "si", "Step one insturction exactly", cmd_si },
   { "info", "Show things about the program being debugged", cmd_info },
-  { "x", "Examine memory", cmd_x},
-  { "p", "Print value of expression EXP", cmd_p},
+  { "x", "Examine memory", cmd_x },
+  { "p", "Print value of expression EXP", cmd_p },
+  { "w", "Set a watchpoint for an expression", cmd_w },
+  { "d", "Delete a watchpoint", cmd_d },
 
   /* TODO: Add more commands */
 
