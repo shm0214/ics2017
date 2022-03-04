@@ -331,6 +331,10 @@ uint32_t eval(int p, int q, bool* success) {
           return val1 && val2;
         case TK_OR:
           return val1 || val2;
+        case TK_EQ:
+          return val1 == val2;
+        case TK_NEQ:
+          return val1 != val2;
         default:
           assert(0);
       }
@@ -352,6 +356,10 @@ uint32_t eval(int p, int q, bool* success) {
           return val1 && val2;
         case TK_OR:
           return val1 || val2;
+        case TK_EQ:
+          return val1 == val2;
+        case TK_NEQ:
+          return val1 != val2;
         default:
           assert(0);
       }
