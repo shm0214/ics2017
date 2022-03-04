@@ -44,8 +44,8 @@ static struct rule {
   {"/", TK_DIV},
   {"-", TK_MINUS},
   {"==", TK_EQ},        // equal
-  {"[1-9][0-9]*|0", TK_NUM},
   {"0[xX][0-9A-Fa-f]+", TK_HEX},
+  {"[1-9][0-9]*|0", TK_NUM},
   {"\\$[eE]?[a-zA-Z]{2}", TK_REG},
   {"\\)", TK_RIGHT},
   {"!", TK_NOT},
