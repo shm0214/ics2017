@@ -30,6 +30,7 @@ WP* new_wp() {
   if (!head) {
     wp->next = head;
     head = wp;
+    return head;
   }
   WP* temp = head;
   for (; temp->next; temp = temp->next) {
