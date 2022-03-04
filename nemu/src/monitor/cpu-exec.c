@@ -30,7 +30,8 @@ void cpu_exec(uint64_t n) {
 
 #ifdef DEBUG
     /* TODO: check watchpoints here. */
-    check_watchpoints();
+    if (check_watchpoints())
+      return;
 
 
 #endif

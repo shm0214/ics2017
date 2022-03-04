@@ -83,6 +83,7 @@ void free_wp(int n) {
 
 bool check_watchpoints() {
   WP* temp = head;
+  bool flag = false;
   while(temp) {
     bool success = true;
     uint32_t value = expr(temp->expr, &success);
@@ -91,10 +92,13 @@ bool check_watchpoints() {
       continue;
     }
     if(value != temp->value) {
+      flag = true;
       printf("watchpoint %d: %s\n", temp->NO, temp->expr);
       printf("Old Value = %d\n", temp->value);
       printf("New Value = %d\n", value);
+      temp->value = value;
     }
+    temp = temp->next;
   }
-  return true;
+  return flag;
 }
