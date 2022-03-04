@@ -58,9 +58,16 @@ static int cmd_info(char* args) {
 }
 
 static int cmd_x(char* args){
-  int n, addr;
-  sscanf(args, "%d %x", &n, &addr);
-  printf("0x%x:\t", addr);
+  int n;
+  char exp[100];
+  sscanf(args, "%d %s", &n, exp);
+  bool success = true;
+  uint32_t addr = expr(args, &success);
+  if(!success)
+    printf("wrong expression!\n");
+  else{
+    printf("0x%x:\t", addr);
+  }
   for (int i = 0; i < n; i++) {
     printf("0x%08x ", vaddr_read(addr + 4 * i, 4));
   }
