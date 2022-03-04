@@ -49,7 +49,7 @@ void free_wp(int n) {
   WP* temp = head;
   if (head->NO == n){
     head = head->next;
-    head->next = NULL;
+    temp->next = NULL;
   } else 
     for(; temp->next; temp = temp->next) {
       if (temp->NO > n){
@@ -57,9 +57,10 @@ void free_wp(int n) {
         assert(0);
       }
       if (temp->next->NO == n) {
+        WP* temp1 = temp->next;
         temp->next = temp->next->next;
-        temp->next->next = NULL;
-        temp = temp->next;
+        temp1->next = NULL;
+        temp = temp1;
         break;
       }
     }
