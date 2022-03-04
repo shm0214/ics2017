@@ -8,15 +8,15 @@
 
 enum {
   TK_NOTYPE = 256,
-  TK_EQ,
   TK_NUM,
+  TK_HEX,
+  TK_LEFT,
+  TK_RIGHT,
+  TK_EQ,
   TK_PLUS,
   TK_MINUS,
   TK_MULTIPLY,
   TK_DIV,
-  TK_LEFT,
-  TK_RIGHT,
-  TK_HEX,
   TK_REG,
   TK_NEQ,
   TK_AND,
@@ -217,6 +217,10 @@ uint32_t eval(int p, int q, bool* success) {
       int num;
       sscanf(tokens[p].str, "%u", &num);
       return num;
+    }else if (tokens[p].type == TK_HEX) {
+      int num;
+      sscanf(tokens[p].str + 2, "%x", &num);
+      return num;
     }
     *success = false;
     return 0;
@@ -298,10 +302,11 @@ uint32_t expr(char *e, bool *success) {
     *success = false;
     return 0;
   }
-
-  // for (int i = 0; i < nr_token; i++) {
-  //   if ()
-  // }
+  // 乘号前面应为一个表达式或数（即右括号、10/16进制数），而解引用前应为一个运算符
+  for (int i = 0; i < nr_token; i++) {
+    if (tokens[i].type == TK_MULTIPLY && (i == 0 || tokens[i - 1].type >= TK_EQ))
+      tokens[i].type = TK_DEREF;
+  }
 
   /* TODO: Insert codes to evaluate the expression. */
   return eval(0, nr_token - 1, success);
