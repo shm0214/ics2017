@@ -278,40 +278,57 @@ uint32_t eval(int p, int q, bool* success) {
     }
     if (*success == false && (tokens[op].type == TK_MINUS || get_priority(tokens[op].type == 5))) {
       *success = true;
-      if (tokens[op].type == TK_MINUS) {
-        int num = 0;
-        for (int i = op; i >= p; i--){
-          if (tokens[i].type == TK_MINUS)
-            num++;
-          else
-            break;
-        }
-        if (num % 2 != 0)
-          val2 = -val2;
-        if (op - num <= p) {
-          *success = true;
-          return val2;
-        }
-        if (p <= op - num - 1)
-          val1 = eval(p, op - num - 1, success);
+      int num = 0;
+      for (int i = op; i >= p; i--){
+        if (tokens[i].type == tokens[op].type)
+          num++;
         else
-          val1 = 0;
-        switch (tokens[op - num].type) {
-          case TK_PLUS:
-            return val1 + val2;
-          case TK_MINUS:
-            return val1 - val2;
-          case TK_MULTIPLY:
-            return val1 * val2;
-          case TK_DIV:
-            if (val2 == 0) {
-              *success = false;
-              return 0;
-            }
-            return val1 / val2;
-          default:
-            assert(0);
-        }
+          break;
+      }
+      switch (tokens[op].type) {
+        case TK_MINUS:
+          if (num % 2 != 0)
+            val2 = -val2;
+          break;
+        case TK_NOT:
+          if (num % 2 && val2)
+            val2 = 1;
+          else if (num % 2 && !val2)
+            val2 = 0;
+          else if (num % 2 != 0 && val2)
+            val2 = 0;
+          else if (num % 2 != 0 && !val2)
+            val2 = 1;
+          break;
+        case TK_DEREF:
+          for (int i = 0; i < num; i++) {
+            val2 = vaddr_read(val2, 4);
+          }
+          break;
+      }
+      if (op - num <= p) {
+        *success = true;
+        return val2;
+      }
+      if (p <= op - num - 1)
+        val1 = eval(p, op - num - 1, success);
+      else
+        val1 = 0;
+      switch (tokens[op - num].type) {
+        case TK_PLUS:
+          return val1 + val2;
+        case TK_MINUS:
+          return val1 - val2;
+        case TK_MULTIPLY:
+          return val1 * val2;
+        case TK_DIV:
+          if (val2 == 0) {
+            *success = false;
+            return 0;
+          }
+          return val1 / val2;
+        default:
+          assert(0);
       }
     } else {
       switch (tokens[op].type) {
