@@ -31,4 +31,5 @@ make_EHelper(leave);
 make_EHelper(not);
 make_EHelper(inc);
 make_EHelper(jmp);
+make_EHelper(imul2);
 
