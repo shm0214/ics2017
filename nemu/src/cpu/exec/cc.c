@@ -30,7 +30,7 @@ void rtl_setcc(rtlreg_t* dest, uint8_t subcode) {
       *dest = cpu.SF == 1;
       break;
     case CC_L:
-      *dest = cpu.SF == cpu.OF;
+      *dest = cpu.SF != cpu.OF;
       break;
     case CC_LE:
       *dest = cpu.ZF == 1 && cpu.SF != cpu.OF;
