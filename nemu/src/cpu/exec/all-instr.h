@@ -30,4 +30,5 @@ make_EHelper(or);
 make_EHelper(leave);
 make_EHelper(not);
 make_EHelper(inc);
+make_EHelper(jmp);
 
