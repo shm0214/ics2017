@@ -10,6 +10,7 @@ make_EHelper(sub) {
   rtl_sub(&t2, &id_dest->val, &id_src->val);
   rtl_sltu(&t3, &id_dest->val, &t2);
   operand_write(id_dest, &t2);
+  // 这一步只改变了寄存器的值而id_dest不变
   rtl_update_ZFSF(&t2, id_dest->width);
 
   // 这一步意义是啥啊
