@@ -152,7 +152,7 @@ void difftest_step(uint32_t eip) {
   for (int i = 0; i < 8; i++) {
     if (r.array[i] != reg_l(i)) {
       diff = true;
-      printf("%s\tnemu:%x\tqemu:%x\n", reg_name(i, 4), reg_l(i), r.array[i]);
+      printf("%s\tnemu:0x%x\tqemu:0x%x\n", reg_name(i, 4), reg_l(i), r.array[i]);
     }
   }
   if (r.eip != cpu.eip) {
