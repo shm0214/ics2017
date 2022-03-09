@@ -6,7 +6,9 @@ make_EHelper(mov) {
 }
 
 make_EHelper(push) {
-  rtl_push(&id_dest->val);
+  // 没查到为啥要符号扩展，但事实如此
+  rtl_sext(&t0, &id_dest->val, id_dest->width);
+  rtl_push(&t0);
   print_asm_template1(push);
 }
 
