@@ -6,7 +6,6 @@
 
 /* You will define this macro in PA2 */
 #define HAS_IOE
-#define HAS_SERIAL
 
 #include "debug.h"
 #include "macro.h"
