@@ -40,7 +40,9 @@ make_EHelper(or) {
 }
 
 make_EHelper(sar) {
-  rtl_sar(&t0, &id_dest->val, &id_src->val);
+  // 这里也要做符号拓展
+  rtl_sext(&t0, &id_dest->val, id_dest->width);
+  rtl_sar(&t0, &t0, &id_src->val);
   operand_write(id_dest, &t0);
   rtl_update_ZFSF(&t0, id_dest->width);
   // unnecessary to update CF and OF in NEMU
