@@ -81,3 +81,14 @@ make_EHelper(not) {
   operand_write(id_dest, &id_dest->val);
   print_asm_template1(not);
 }
+
+make_EHelper(rol) {
+  rtl_shri(&t0, &id_dest->val, id_dest->width * 8 - id_src->val);
+  rtl_shl(&t1, &id_dest->val, &id_src->val);
+  rtl_add(&t2, &t0, &t1);
+  operand_write(id_dest, &t2);
+  rtl_andi(&t0, &t0, 1);
+  rtl_set_CF(&t0);
+
+  print_asm_template2(rol);
+}
