@@ -375,7 +375,7 @@ uint32_t expr(char *e, bool *success) {
   }
   // 乘号前面应为一个表达式或数（即右括号、10/16进制数），而解引用前应为一个运算符
   for (int i = 0; i < nr_token; i++) {
-    if (tokens[i].type == TK_MULTIPLY && (i == 0 || tokens[i - 1].type >= TK_EQ))
+    if (tokens[i].type == TK_MULTIPLY && (i == 0 || tokens[i - 1].type >= TK_EQ || tokens[i-1].type == TK_LEFT))
       tokens[i].type = TK_DEREF;
   }
 
