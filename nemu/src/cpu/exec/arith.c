@@ -93,7 +93,7 @@ make_EHelper(dec) {
 }
 
 make_EHelper(neg) {
-  rtl_li(&t0, id_dest->val == 0);
+  rtl_li(&t0, id_dest->val != 0);
   rtl_set_CF(&t0);
   id_dest->val = -id_dest->val;
   operand_write(id_dest, &id_dest->val);
