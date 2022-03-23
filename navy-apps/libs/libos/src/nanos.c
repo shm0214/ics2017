@@ -34,7 +34,7 @@ static intptr_t brk = (intptr_t)&_end;
 void *_sbrk(intptr_t increment){
   intptr_t before = brk;
   intptr_t now = brk + increment;
-  if(_syscall(SYS_brk, now) == 0) {
+  if(_syscall_(SYS_brk, now, 0, 0) == 0) {
     brk = now;
     return (void*) before;
   }
