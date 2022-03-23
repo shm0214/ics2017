@@ -6,7 +6,7 @@ void diff_test_skip_qemu();
 void diff_test_skip_nemu();
 
 make_EHelper(lidt) {
-  rtl_li(&t0, id_dest->val);
+  rtl_li(&t0, id_dest->addr);
   cpu.idtr.limit = vaddr_read(t0, 2);
   cpu.idtr.base = vaddr_read(t0 + 2, 4);
   if(decoding.is_operand_size_16)
