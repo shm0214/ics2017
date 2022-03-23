@@ -16,6 +16,7 @@ _RegSet* do_syscall(_RegSet *r) {
       _halt(a[1]);
       break;
     case SYS_write:
+      Log("%d", a[3]);
       if(a[1] == 1 || a[1] == 2)
         for(int i = 0; i < a[3]; i++) 
           _putc(((char*)a[2])[i]);
