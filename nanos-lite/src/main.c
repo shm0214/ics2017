@@ -29,7 +29,7 @@ int main() {
 #endif
 
   init_fs();
-
+  Log("ok\n");
   uint32_t entry = loader(NULL, "/bin/text");
   ((void (*)(void))entry)();
 
