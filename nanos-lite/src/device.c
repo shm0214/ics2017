@@ -12,7 +12,7 @@ size_t events_read(void *buf, size_t len) {
   int key = _read_key();
   bool down = 0;
   if (key & 0x8000) {
-    key |= 0x8000;
+    key |= 0xfff;
     down = 1;
   }
   if (key) 
