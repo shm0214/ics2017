@@ -28,7 +28,7 @@ static Finfo file_table[] __attribute__((used)) = {
 #define NR_FILES (sizeof(file_table) / sizeof(file_table[0]))
 
 void init_fs() {
-  file_table[FD_FB].size = _screen.width * _screen.height;
+  file_table[FD_FB].size = _screen.width * _screen.height * 4;
 }
 
 size_t fs_filesz(int fd) {
