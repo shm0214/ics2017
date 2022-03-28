@@ -52,7 +52,6 @@ int NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
   if (has_nwm) {
     for (int i = 0; i < h; i ++) {
       printf("\033[X%d;%d", x, y + i);
-      Log("\033[X%d;%d", x, y + i);
       for (int j = 0; j < w; j ++) {
         putchar(';');
         fwrite(&pixels[i * w + j], 1, 4, stdout);
