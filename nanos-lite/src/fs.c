@@ -2,6 +2,8 @@
 
 extern void ramdisk_read(void *buf, off_t offset, size_t len);
 extern void ramdisk_write(const void *buf, off_t offset, size_t len);
+extern void dispinfo_read(void *buf, off_t offset, size_t len);
+extern void fb_write(const void *buf, off_t offset, size_t len);
 
 typedef struct {
   char *name;
@@ -26,7 +28,7 @@ static Finfo file_table[] __attribute__((used)) = {
 #define NR_FILES (sizeof(file_table) / sizeof(file_table[0]))
 
 void init_fs() {
-  // TODO: initialize the size of /dev/fb
+  file_table[FD_FB].size = _screen.width * _screen.height;
 }
 
 size_t fs_filesz(int fd) {
@@ -51,6 +53,10 @@ ssize_t fs_read(int fd, void *buf, size_t len) {
     case FD_STDOUT:
     case FD_STDERR:
       return 0;
+    case FD_DISPINFO:
+      dispinfo_read(buf, file_table[fd].open_offset, len);
+      file_table[fd].open_offset += len;
+      return len;
     default:
       ramdisk_read(buf, file_table[fd].open_offset + file_table[fd].disk_offset, len);
       file_table[fd].open_offset += len;
@@ -67,6 +73,11 @@ ssize_t fs_write(int fd, const void *buf, size_t len) {
     case FD_STDERR:
       for (int i = 0; i < len; i++)
         _putc(((char*)buf)[i]);
+      return len;
+    case FD_FB:
+      fb_write(buf, file_table[fd].open_offset, len);
+      file_table[fd].open_offset += len;
+      return len;
     default:
       if (file_table[fd].open_offset + len > size)
         len = size - file_table[fd].open_offset;
