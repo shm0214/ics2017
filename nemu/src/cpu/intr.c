@@ -10,7 +10,7 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
   rtl_push(&ret_addr);
   rtl_li(&t0, vaddr_read(cpu.idtr.base + NO * 8, 2));
   rtl_li(&t1, vaddr_read(cpu.idtr.base + NO * 8 + 6, 2));
-  decoding.jmp_eip = (t1<<16)| (0xffff&t0);
+  decoding.jmp_eip = (t1 << 16)| (0xffff & t0);
   decoding.is_jmp = 1;
   
 }
