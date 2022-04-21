@@ -57,13 +57,13 @@ uint32_t vaddr_read(vaddr_t addr, int len) {
       paddr_t paddr = page_translate(addr + i, false);
       ret |= paddr_read(paddr, 1) << (8 * i); 
     }
-    if(addr > 0x1900000 && ret)
+    if(addr == 0x1d99000 && ret)
     Log("1:%x %x", addr, ret);
     return ret;
   }
   paddr_t paddr = page_translate(addr, false);
   ret = paddr_read(paddr, len);
-    if(addr > 0x1900000 && ret)
+    if(addr > 0x1d99000 && ret)
 
   Log("2:%x %x", addr, ret);
   return ret;
