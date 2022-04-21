@@ -1,4 +1,5 @@
 #include <x86.h>
+#include <stdio.h>
 
 #define PG_ALIGN __attribute((aligned(PGSIZE)))
 
@@ -68,6 +69,7 @@ void _switch(_Protect *p) {
 void _map(_Protect *p, void *va, void *pa) {
   PDE* pgdir = &((PDE*)(p->ptr))[PDX(va)];
   PTE* ptep;
+  printf("%d", pgdir);
   if (*pgdir & 0x1) {
     ptep = (PTE*)PTE_ADDR(*pgdir);
   } else {
