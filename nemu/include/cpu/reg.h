@@ -48,16 +48,22 @@ typedef struct {
       uint32_t    : 20;
     };
     uint32_t eflags;
-
+  };
   struct {
     uint16_t limit; 
     uint32_t base;
   } idtr;
 
   uint32_t CS;
-
-
+  union {
+    struct {
+      uint32_t cr3 : 20;
+      uint32_t     : 12;
+    };
+    uint32_t CR3;
   };
+  uint32_t CR0;
+
 } CPU_state;
 
 extern CPU_state cpu;

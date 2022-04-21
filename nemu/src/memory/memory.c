@@ -27,10 +27,39 @@ void paddr_write(paddr_t addr, int len, uint32_t data) {
     mmio_write(addr, len, data, no);
 }
 
+#define PDX(va)     (((uint32_t)(va) >> 22) & 0x3ff)
+#define PTX(va)     (((uint32_t)(va) >> 12) & 0x3ff)
+#define OFF(va)     ((uint32_t)(va) & 0xfff)
+
+paddr_t page_translate(vaddr_t addr, bool dirty) {
+  if (cpu.CR0 >> 31 != 1)
+    return addr;
+  PDE* pgdir = (PDE*)(uint32_t)cpu.cr3;
+  PDE pde;
+  pde.val = paddr_read((paddr_t)&(pgdir[PDX(addr)]), 4);
+  assert(pde.present);
+  pde.accessed = true;
+  PTE* ptep = (PTE*)(uint32_t)(pde.val >> 12);
+  PTE pte;
+  pte.val = paddr_read((paddr_t)&(ptep[PTX(addr)]), 4);
+  assert(pte.present);
+  pte.accessed = true;
+  pte.dirty = dirty;
+  return (pte.val & ~0xfff) | OFF(addr);
+}
+
+
 uint32_t vaddr_read(vaddr_t addr, int len) {
-  return paddr_read(addr, len);
+  if (addr / 4096 != (addr + len - 1) / 4096)
+    assert(0);
+  paddr_t paddr = page_translate(addr, false);
+  return paddr_read(paddr, len);
 }
 
 void vaddr_write(vaddr_t addr, int len, uint32_t data) {
-  paddr_write(addr, len, data);
+  if (addr / 4096 != (addr + len - 1) / 4096)
+    assert(0);
+  paddr_t paddr = page_translate(addr, true);
+  paddr_write(paddr, len, data);
 }
+
