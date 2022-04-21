@@ -52,7 +52,12 @@ paddr_t page_translate(vaddr_t addr, bool dirty) {
 
 uint32_t vaddr_read(vaddr_t addr, int len) {
   if ((addr & 0xfffff000) != ((addr + len - 1) & 0xfffff000)){
-    printf("%d %d\n", addr, addr + len - 1);
+    uint32_t ret = 0;
+    for (int i = 0; i < len; i++) {
+      paddr_t paddr = page_translate(addr, false);
+      ret |= paddr_read(paddr, 1) << (8 * i); 
+    }
+    return ret;
   }
   paddr_t paddr = page_translate(addr, false);
   return paddr_read(paddr, len);
