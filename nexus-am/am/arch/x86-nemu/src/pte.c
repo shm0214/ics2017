@@ -76,7 +76,6 @@ void _map(_Protect *p, void *va, void *pa) {
     *pgdir = PTE_ADDR(ptep) | 0x1;
   }
   ptep[PTX(va)] = PTE_ADDR(pa) | 0x1;
-
 }
 
 void _unmap(_Protect *p, void *va) {
