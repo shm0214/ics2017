@@ -8,7 +8,7 @@ extern size_t fs_filesz(int fd);
 extern int fs_close(int fd);
 void* new_page(void);
 
-#define DEFAULT_ENTRY ((void *)0x8048000)
+#define DEFAULT_ENTRY ((void *)0x4000000)
 
 uintptr_t loader(_Protect *as, const char *filename) {
   // size_t size = get_ramdisk_size();
