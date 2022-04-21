@@ -51,8 +51,9 @@ paddr_t page_translate(vaddr_t addr, bool dirty) {
 
 
 uint32_t vaddr_read(vaddr_t addr, int len) {
-  if ((addr & 0xfffff000) != ((addr + len - 1) & 0xfffff000))
-    assert(0);
+  if ((addr & 0xfffff000) != ((addr + len - 1) & 0xfffff000)){
+    printf("%d %d\n", addr, addr + len - 1);
+  }
   paddr_t paddr = page_translate(addr, false);
   return paddr_read(paddr, len);
 }
