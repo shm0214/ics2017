@@ -37,7 +37,7 @@ paddr_t page_translate(vaddr_t addr, bool dirty) {
   PDE* pgdir = (PDE*)(cpu.cr3.val & 0xfffff000);
   PDE pde;
   pde.val = paddr_read((paddr_t)&(pgdir[PDX(addr)]), 4);
-  Log("%d", pde.val);
+  // Log("%d", pde.val);
   assert(pde.present);
   pde.accessed = true;
   PTE* ptep = (PTE*)(uint32_t)(pde.val & 0xfffff000);
