@@ -17,10 +17,10 @@ make_EHelper(lidt) {
 make_EHelper(mov_r2cr) {
   switch (id_dest->reg) {
     case 0:
-      cpu.CR0 = id_src->val;
+      cpu.cr0.val = id_src->val;
       break;
     case 3:
-      cpu.CR3 = id_src->val;
+      cpu.cr3.val = id_src->val;
       break;
   }
 
@@ -30,10 +30,10 @@ make_EHelper(mov_r2cr) {
 make_EHelper(mov_cr2r) {
   switch (id_src->reg) {
     case 0:
-      operand_write(id_dest, &cpu.CR0);
+      operand_write(id_dest, &cpu.cr0.val);
       break;
     case 3:
-      operand_write(id_dest, &cpu.CR3);
+      operand_write(id_dest, &cpu.cr3.val);
       break;
   }
 

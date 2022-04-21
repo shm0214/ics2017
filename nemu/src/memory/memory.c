@@ -32,9 +32,9 @@ void paddr_write(paddr_t addr, int len, uint32_t data) {
 #define OFF(va)     ((uint32_t)(va) & 0xfff)
 
 paddr_t page_translate(vaddr_t addr, bool dirty) {
-  if (cpu.CR0 >> 31 != 1)
+  if (cpu.cr0.val >> 31 != 1)
     return addr;
-  PDE* pgdir = (PDE*)(uint32_t)cpu.cr3;
+  PDE* pgdir = (PDE*)(uint32_t)(cpu.cr3.val >> 12);
   PDE pde;
   pde.val = paddr_read((paddr_t)&(pgdir[PDX(addr)]), 4);
   assert(pde.present);
