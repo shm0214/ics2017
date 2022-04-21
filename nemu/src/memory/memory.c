@@ -50,15 +50,15 @@ paddr_t page_translate(vaddr_t addr, bool dirty) {
 
 
 uint32_t vaddr_read(vaddr_t addr, int len) {
-  // if (addr / 4096 != (addr + len - 1) / 4096)
-  //   assert(0);
+  if ((addr & 0xfffff000) != ((addr + len - 1) & 0xfffff000))
+    assert(0);
   paddr_t paddr = page_translate(addr, false);
   return paddr_read(paddr, len);
 }
 
 void vaddr_write(vaddr_t addr, int len, uint32_t data) {
-  // if (addr / 4096 != (addr + len - 1) / 4096)
-  //   assert(0);
+  if ((addr & 0xfffff000) != ((addr + len - 1) & 0xfffff000))
+    assert(0);
   paddr_t paddr = page_translate(addr, true);
   paddr_write(paddr, len, data);
 }
