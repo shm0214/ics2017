@@ -51,16 +51,19 @@ paddr_t page_translate(vaddr_t addr, bool dirty) {
 
 
 uint32_t vaddr_read(vaddr_t addr, int len) {
+  uint32_t ret = 0;
   if ((addr & 0xfffff000) != ((addr + len - 1) & 0xfffff000)){
-    uint32_t ret = 0;
     for (int i = 0; i < len; i++) {
       paddr_t paddr = page_translate(addr + i, false);
       ret |= paddr_read(paddr, 1) << (8 * i); 
     }
+    Log("%x %x\n", addr, ret);
     return ret;
   }
   paddr_t paddr = page_translate(addr, false);
-  return paddr_read(paddr, len);
+  ret = paddr_read(paddr, len);
+  Log("%x %x\n", addr, ret);
+  return ret;
 }
 
 void vaddr_write(vaddr_t addr, int len, uint32_t data) {
