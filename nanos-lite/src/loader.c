@@ -14,6 +14,7 @@ uintptr_t loader(_Protect *as, const char *filename) {
   // size_t size = get_ramdisk_size();
   // ramdisk_read((void *)DEFAULT_ENTRY, 0, size);
   int fd = fs_open(filename, 0, 0);
+  // 该死的无符号数！！！
   int size = fs_filesz(fd);
   void* va = DEFAULT_ENTRY;
   void* pa;
