@@ -34,12 +34,12 @@ void paddr_write(paddr_t addr, int len, uint32_t data) {
 paddr_t page_translate(vaddr_t addr, bool dirty) {
   if (cpu.cr0.val >> 31 != 1)
     return addr;
-  PDE* pgdir = (PDE*)(uint32_t)(cpu.cr3.val >> 12);
+  PDE* pgdir = (PDE*)(uint32_t)(cpu.cr3.val & 0xfffff000);
   PDE pde;
   pde.val = paddr_read((paddr_t)&(pgdir[PDX(addr)]), 4);
   assert(pde.present);
   pde.accessed = true;
-  PTE* ptep = (PTE*)(uint32_t)(pde.val >> 12);
+  PTE* ptep = (PTE*)(uint32_t)(pde.val & 0xfffff000);
   PTE pte;
   pte.val = paddr_read((paddr_t)&(ptep[PTX(addr)]), 4);
   assert(pte.present);
