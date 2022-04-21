@@ -57,8 +57,8 @@ typedef struct {
   uint32_t CS;
   union {
     struct {
-      uint32_t     : 12;
       uint32_t cr3 : 20;
+      uint32_t     : 12;
     };
     uint32_t CR3;
   };
