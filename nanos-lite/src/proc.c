@@ -33,7 +33,7 @@ _RegSet* schedule(_RegSet *prev) {
 
   // always select pcb[0] as the new process
   count++;
-  if (count == 10) {
+  if (count == 1) {
     count = 0;
     current = &pcb[1];
   } else
