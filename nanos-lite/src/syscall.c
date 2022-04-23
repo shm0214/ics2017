@@ -6,6 +6,7 @@ extern ssize_t fs_read(int fd, void *buf, size_t len);
 extern ssize_t fs_write(int fd, const void *buf, size_t len);
 extern off_t fs_lseek(int fd, off_t offset, int whence);
 extern int fs_close(int fd);
+int mm_brk(uint32_t new_brk);
 
 _RegSet* do_syscall(_RegSet *r) {
   uintptr_t a[4];
@@ -29,7 +30,7 @@ _RegSet* do_syscall(_RegSet *r) {
     //   SYSCALL_ARG1(r) = a[3];
     //   break;
     case SYS_brk:
-      SYSCALL_ARG1(r) = 0;
+      SYSCALL_ARG1(r) = mm_brk(SYSCALL_ARG2(r));
       break;
     case SYS_lseek:
       SYSCALL_ARG1(r) = fs_lseek(a[1], a[2], a[3]);
