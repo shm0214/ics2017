@@ -16,8 +16,10 @@ size_t events_read(void *buf, size_t len) {
   if (key & 0x8000) {
     key &= 0xfff;
     down = 1;
-    if (key == 13)
+    if (key == 13){
+      Log("F12");
       current_game = !current_game;
+    }
   }
   if (key) 
     sprintf(buf, "%s %s\n", down ? "kd" : "ku", keyname[key]);
