@@ -30,12 +30,12 @@ int main() {
 #endif
 
   init_fs();
-  // uint32_t entry = loader(NULL, "/bin/pal");
-  // ((void (*)(void))entry)();
+  uint32_t entry = loader(NULL, "/bin/pal");
+  ((void (*)(void))entry)();
   // load_prog("/bin/pal");
-  // load_prog("/bin/hello");
-  // load_prog("/bin/videotest");
-  load_prog("/bin/events");
-  _trap();
+  // // load_prog("/bin/hello");
+  // // load_prog("/bin/videotest");
+  // load_prog("/bin/events");
+  // _trap();
   panic("Should not reach here");
 }
