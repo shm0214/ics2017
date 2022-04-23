@@ -38,7 +38,7 @@ _RegSet* schedule(_RegSet *prev) {
     count = 0;
     current = &pcb[1];
   } else {
-    current = current_game ? &pcb[0] : &pcb[1];
+    current = current_game ? &pcb[0] : &pcb[2];
   } 
 
   // TODO: switch to the new address space,
