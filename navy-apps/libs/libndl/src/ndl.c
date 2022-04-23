@@ -141,5 +141,6 @@ static void get_display_info() {
   fclose(dispinfo);
   printf("%d %d\n", screen_w, screen_h);
   assert(screen_w > 0 && screen_h > 0);
+  fseek(dispinfo, 0, 0);
 }
 
