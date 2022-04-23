@@ -15,6 +15,7 @@ size_t events_read(void *buf, size_t len) {
     key &= 0xfff;
     down = 1;
   }
+  Log("%d", key);
   if (key) 
     sprintf(buf, "%s %s %d\n", down ? "kd" : "ku", keyname[key], key);
   // else
