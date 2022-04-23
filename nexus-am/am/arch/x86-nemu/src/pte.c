@@ -1,5 +1,4 @@
 #include <x86.h>
-#include <klib.h>
 
 #define PG_ALIGN __attribute((aligned(PGSIZE)))
 
@@ -82,7 +81,6 @@ void _unmap(_Protect *p, void *va) {
 }
 
 _RegSet *_umake(_Protect *p, _Area ustack, _Area kstack, void *entry, char *const argv[], char *const envp[]) {
-  printf("%d %d\n", ustack.start, ustack.end);
   uint32_t* ptr = ustack.end - 4;
   for (int i = 0; i < 3; i++) {
     *ptr-- = 0;
@@ -97,8 +95,6 @@ _RegSet *_umake(_Protect *p, _Area ustack, _Area kstack, void *entry, char *cons
     *ptr-- = 0;
   }
   ptr++;
-  printf("%d\n", ptr);
   *(uint32_t*)(ustack.start) = (uint32_t)ptr;
-  printf("%d\n", *(uint32_t*)(ustack.start));
   return (_RegSet*)((uint32_t)ptr);
 }
