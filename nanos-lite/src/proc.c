@@ -27,17 +27,19 @@ void load_prog(const char *filename) {
 }
 
 int count = 0;
+bool current_game = 1;
 _RegSet* schedule(_RegSet *prev) {
   // save the context pointer
   current->tf = prev;
 
   // always select pcb[0] as the new process
   count++;
-  if (count == 1) {
+  if (count == 10) {
     count = 0;
     current = &pcb[1];
-  } else
-    current = &pcb[0]; 
+  } else {
+    current = current_game ? &pcb[0] : &pcb[1];
+  } 
 
   // TODO: switch to the new address space,
   // then return the new context
