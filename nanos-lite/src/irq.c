@@ -1,6 +1,7 @@
 #include "common.h"
 
 extern _RegSet* do_syscall(_RegSet *r);
+_RegSet* schedule(_RegSet *prev) ;
 
 
 static _RegSet* do_event(_Event e, _RegSet* r) {
@@ -9,7 +10,7 @@ static _RegSet* do_event(_Event e, _RegSet* r) {
       do_syscall(r);
       break;
     case _EVENT_TRAP:
-      printf("trap\n");
+      return schedule(r);
       break;
     default: 
       panic("Unhandled event ID = %d", e.event);
